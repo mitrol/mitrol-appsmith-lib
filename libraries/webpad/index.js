@@ -15,8 +15,10 @@ export default {
 	call: async (client, idcampania) => {
     try {
       const endpoint = `/api/call?idCampania=${idcampania}&destino=${client}`
+      console.log(`call - calling endpoint ${endpoint}`)
       //TODO: define how to obtain jwt from onload
       let jwt = getUrlParams("jwt")
+      console.log(`call - obtained jwt as: ${jwt}`)
       await post(endpoint, jwt)
       .then((res) => {
         //TODO: define responses of webpadAPI to know how to handle success

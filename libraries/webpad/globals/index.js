@@ -4,6 +4,7 @@ export const getUrlParams = async (param) => {
 	var isParam = false;
 	var isParamValue = false;
 	let url = window.location.href;
+	console.log(`getUrlParams - url: ${url}`)
 	for(let i = 0; url[i] !== undefined; i++) {
 		// Check the word character per character
 		if (!isParamValue) {
