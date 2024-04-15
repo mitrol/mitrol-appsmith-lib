@@ -4,6 +4,7 @@ export default {
    */
 
 apiUrl: "",
+formUrl: "",
 /**
  * @method post Call endpoint POST
  * @param {endpoint} string , endpoint to call
@@ -11,7 +12,6 @@ apiUrl: "",
  * @return {Promise} Promise object represents the response of the call
  */
 post: async (endpoint, jwt) => {
-
   //set headers
   var myHeaders = new Headers();
   myHeaders.append("Authorization", "Bearer "+ jwt);
@@ -176,7 +176,7 @@ return await response.json()
       var copyParam = "";
       var isParam = false;
       var isParamValue = false;
-      let url = window.location.href;
+      let url = formUrl;
       console.log(`getUrlParams - url: ${url}`)
       for(let i = 0; url[i] !== undefined; i++) {
         // Check the word character per character
