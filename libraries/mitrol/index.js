@@ -172,11 +172,11 @@ return await response.json()
      * @returns {*} paramValue according to the value on get URL
      */
     getUrlParams: async (param) => {
+      var url = mitrol.formUrl;
       var paramValue = "";
       var copyParam = "";
       var isParam = false;
       var isParamValue = false;
-      let url = mitrol.formUrl;
       console.log(`getUrlParams - url: ${url}`)
       for(let i = 0; url[i] !== undefined; i++) {
         // Check the word character per character
