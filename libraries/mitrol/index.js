@@ -60,7 +60,6 @@ return await response.json()
       const endpoint = `/api/call?idCampania=${idcampania}&destino=${client}`
       console.log(`call - calling endpoint ${endpoint}`)
       let jwt = getUrlParams("jwt")
-      console.log(`call - obtained jwt as: ${jwt}`)
       await post(endpoint, jwt)
       .then((res) => {
         //TODO: define responses of webpadAPI to know how to handle success
@@ -172,18 +171,16 @@ return await response.json()
      * @returns {*} paramValue according to the value on get URL
      */
     getUrlParams: async (param) => {
-      var url = mitrol.formUrl;
       var paramValue = "";
       var copyParam = "";
       var isParam = false;
       var isParamValue = false;
       console.log(`getUrlParams - mitrol.formUrl: ${mitrol.formUrl}`)
-      console.log(`getUrlParams - url: ${url}`)
-      for(let i = 0; url[i] !== undefined; i++) {
+      for(let i = 0; mitrol.formUrl[i] !== undefined; i++) {
         // Check the word character per character
         if (!isParamValue) {
-          if (url[i] === param[copyParam.length]) {
-            copyParam += url[i];
+          if (mitrol.formUrl[i] === param[copyParam.length]) {
+            copyParam += mitrol.formUrl[i];
             isParam = copyParam === param;
             if (isParam) {
               i++;  // Skip over the "="
@@ -193,12 +190,13 @@ return await response.json()
             copyParam = "";
           }
         } else {
-          if (url[i] === '&' || url[i] === undefined) {
+          if (url[i] === '&' || mitrol.formUrl[i] === undefined) {
             break;
           }
           paramValue += url[i];
         }
       }
+      console.log(`getUrlParams - paramName: ${param} | paramValue: ${paramValue}`)
       return paramValue;
     }
 }
