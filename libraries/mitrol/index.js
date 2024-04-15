@@ -1,9 +1,52 @@
-import { getUrlParams } from './globals/index.js';
-import {get, post} from './requests/index.js';
 export default {
   /**
-   * @module webpad Provides methods to interact with webpad API
+   * @module mitrol Provides methods to interact with Mitrol
    */
+
+apiUrl: "",
+/**
+ * @method post Call endpoint POST
+ * @param {endpoint} string , endpoint to call
+ * @param {jwt} string , jwt token
+ * @return {Promise} Promise object represents the response of the call
+ */
+post: async (endpoint, jwt) => {
+
+  //set headers
+  var myHeaders = new Headers();
+  myHeaders.append("Authorization", "Bearer "+ jwt);
+  //req opts
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+  //exec fetch concatenating global url with specific endpoint
+      //TODO: fix apiURL global
+  const response = await fetch(apiUrl+endpoint , requestOptions)
+  return await response.json()
+},
+
+/**
+* @method get Call endpoint GET
+* @param {endpoint} string , endpoint to call
+* @param {jwt} string , jwt token
+* @return {Promise} Promise object represents the response of the call
+*/
+get: async (endpoint, jwt) => {
+var myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer "+ jwt);
+//req opts
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+}
+
+//exec fetch concatenating global url with specific endpoint
+const response = await fetch(apiUrl+endpoint , requestOptions)
+return await response.json()
+},
 
   /**
    * @method call Call using webpad api call endpoint
@@ -16,7 +59,6 @@ export default {
     try {
       const endpoint = `/api/call?idCampania=${idcampania}&destino=${client}`
       console.log(`call - calling endpoint ${endpoint}`)
-      //TODO: define how to obtain jwt from onload
       let jwt = getUrlParams("jwt")
       console.log(`call - obtained jwt as: ${jwt}`)
       await post(endpoint, jwt)
@@ -35,7 +77,6 @@ export default {
    * @return {bool} bool represents the machine state of function
    */
   hold: async (idInteraccion) => {
-    //TODO: define how to obtain jwt from onload
     let jwt = getUrlParams("jwt")
 		//armado de url para post request y ejecucion de funcion
 		let endpoint = `/api/hold?idInteraccion=${idInteraccion}`
@@ -55,7 +96,6 @@ export default {
    * @return {bool} bool represents the machine state of function
    */
 	resume: async (idInteraccion) => {
-    //TODO: define how to obtain jwt from onload
 		let jwt = getUrlParams("jwt")
 		//armado de url para post request y ejecucion de funcion
 		let endpoint = `/api/resume?idInteraccion=${idInteraccion}`
@@ -75,7 +115,6 @@ export default {
    */
 	hangup: async (idInteraccion) => {
     try {
-    //TODO: define how to obtain jwt from onload
 		let jwt = getUrlParams("jwt")
 		const endpoint = `/api/hangup?idInteraccion=${idInteraccion}`
 		await post(endpoint, jwt)  
@@ -92,7 +131,6 @@ export default {
    * @return {Array} Array of outbound campaigns
    */
 	getOutboundCampaigns: async (loginId) => {
-    //TODO: define how to obtain jwt from onload
     let jwt = getUrlParams("jwt")
     let endpoint = `/api/${loginId}/campaigns`
     let campanias = await get(endpoint, jwt)
@@ -127,5 +165,39 @@ export default {
     
     getResultadoGestion: async () => {
     //TODO: define getResultadosGestion and others
+    },
+    /**
+     * 
+     * @param {*} param Name of value on URL
+     * @returns {*} paramValue according to the value on get URL
+     */
+    getUrlParams: async (param) => {
+      var paramValue = "";
+      var copyParam = "";
+      var isParam = false;
+      var isParamValue = false;
+      let url = window.location.href;
+      console.log(`getUrlParams - url: ${url}`)
+      for(let i = 0; url[i] !== undefined; i++) {
+        // Check the word character per character
+        if (!isParamValue) {
+          if (url[i] === param[copyParam.length]) {
+            copyParam += url[i];
+            isParam = copyParam === param;
+            if (isParam) {
+              i++;  // Skip over the "="
+              isParamValue = true;
+            }
+          } else {
+            copyParam = "";
+          }
+        } else {
+          if (url[i] === '&' || url[i] === undefined) {
+            break;
+          }
+          paramValue += url[i];
+        }
+      }
+      return paramValue;
     }
 }
