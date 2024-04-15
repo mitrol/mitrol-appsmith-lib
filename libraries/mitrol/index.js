@@ -177,7 +177,6 @@ return await response.json()
       var copyParam = "";
       var isParam = false;
       var isParamValue = false;
-      console.log(`getUrlParams - formUrl: ${formUrl}`)
       console.log(`getUrlParams - mitrol.formUrl: ${mitrol.formUrl}`)
       console.log(`getUrlParams - url: ${url}`)
       for(let i = 0; url[i] !== undefined; i++) {
