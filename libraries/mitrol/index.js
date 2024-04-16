@@ -21,8 +21,6 @@ post: async (endpoint, jwt) => {
     headers: myHeaders,
     redirect: 'follow'
   };
-  //exec fetch concatenating global url with specific endpoint
-      //TODO: fix apiURL global
   const response = await fetch(apiUrl+endpoint , requestOptions)
   return await response.json()
 },
@@ -42,8 +40,6 @@ var requestOptions = {
   headers: myHeaders,
   redirect: 'follow'
 }
-
-//exec fetch concatenating global url with specific endpoint
 const response = await fetch(apiUrl+endpoint , requestOptions)
 return await response.json()
 },
@@ -59,8 +55,8 @@ return await response.json()
     try {
       const endpoint = `/api/call?idCampania=${idcampania}&destino=${client}`
       console.log(`call - calling endpoint ${endpoint}`)
-      let jwt = getUrlParams("jwt")
-      await post(endpoint, jwt)
+      let jwt = mitrol.getUrlParams("jwt")
+      await mitrol.post(endpoint, jwt)
       .then((res) => {
         //TODO: define responses of webpadAPI to know how to handle success
         return res.idInteraccion
@@ -76,11 +72,11 @@ return await response.json()
    * @return {bool} bool represents the machine state of function
    */
   hold: async (idInteraccion) => {
-    let jwt = getUrlParams("jwt")
+    let jwt = mitrol.getUrlParams("jwt")
 		//armado de url para post request y ejecucion de funcion
 		let endpoint = `/api/hold?idInteraccion=${idInteraccion}`
     try {
-      await post(endpoint, jwt)
+      await mitrol.post(endpoint, jwt)
       //TODO: define responses of webpadAPI to know how to handle success
       return true
     }
@@ -95,11 +91,11 @@ return await response.json()
    * @return {bool} bool represents the machine state of function
    */
 	resume: async (idInteraccion) => {
-		let jwt = getUrlParams("jwt")
+		let jwt = mitrol.getUrlParams("jwt")
 		//armado de url para post request y ejecucion de funcion
 		let endpoint = `/api/resume?idInteraccion=${idInteraccion}`
     try {
-      post(endpoint, jwt)
+      mitrol.post(endpoint, jwt)
       //TODO: define responses of webpadAPI to know how to handle success
       return true  
     } catch (error) {
@@ -114,9 +110,9 @@ return await response.json()
    */
 	hangup: async (idInteraccion) => {
     try {
-		let jwt = getUrlParams("jwt")
+		let jwt = mitrol.getUrlParams("jwt")
 		const endpoint = `/api/hangup?idInteraccion=${idInteraccion}`
-		await post(endpoint, jwt)  
+		await mitrol.post(endpoint, jwt)  
     //TODO: define responses of webpadAPI to know how to handle success
     return true
     } catch (error) {
@@ -130,9 +126,9 @@ return await response.json()
    * @return {Array} Array of outbound campaigns
    */
 	getOutboundCampaigns: async (loginId) => {
-    let jwt = getUrlParams("jwt")
+    let jwt = mitrol.getUrlParams("jwt")
     let endpoint = `/api/${loginId}/campaigns`
-    let campanias = await get(endpoint, jwt)
+    let campanias = await mitrol.get(endpoint, jwt)
     campanias = await campanias.value
     let outboundCampaigns = []
     for (let i = 0; i < campanias.length; i++) {
@@ -151,9 +147,9 @@ return await response.json()
   setResultadoGestion: async (idInteraccion, idResultadoGestionInterno) => {
     try {
     //TODO: define how to obtain jwt from onload
-    let jwt = getUrlParams("jwt")
+    let jwt = mitrol.getUrlParams("jwt")
     let endpoint = `/interactionresult?idInteraccion=${idInteraccion}&idResultadoGestionInterno=${idResultadoGestionInterno}`
-    await get(endpoint, jwt)
+    await mitrol.get(endpoint, jwt)
     //TODO: define responses of webpadAPI to know how to handle success
     return true
     } catch (error) {
@@ -170,7 +166,7 @@ return await response.json()
      * @param {*} param Name of value on URL
      * @returns {*} paramValue according to the value on get URL
      */
-    getUrlParams: async (param) => {
+    getUrlParams: (param) => {
       var paramValue = "";
       var copyParam = "";
       var isParam = false;
