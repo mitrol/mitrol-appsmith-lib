@@ -190,10 +190,10 @@ return await response.json()
             copyParam = "";
           }
         } else {
-          if (url[i] === '&' || mitrol.formUrl[i] === undefined) {
+          if (mitrol.formUrl[i] === '&' || mitrol.formUrl[i] === undefined) {
             break;
           }
-          paramValue += url[i];
+          paramValue += mitrol.formUrl[i];
         }
       }
       console.log(`getUrlParams - paramName: ${param} | paramValue: ${paramValue}`)
