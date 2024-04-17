@@ -21,7 +21,7 @@ post: async (endpoint, jwt) => {
     headers: myHeaders,
     redirect: 'follow'
   };
-  const response = await fetch(apiUrl+endpoint , requestOptions)
+  const response = await fetch(mitrol.apiUrl+endpoint , requestOptions)
   return await response.json()
 },
 
@@ -40,7 +40,7 @@ var requestOptions = {
   headers: myHeaders,
   redirect: 'follow'
 }
-const response = await fetch(apiUrl+endpoint , requestOptions)
+const response = await fetch(mitrol.apiUrl+endpoint , requestOptions)
 return await response.json()
 },
 
