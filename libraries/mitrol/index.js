@@ -21,10 +21,12 @@ post: async (endpoint, jwt) => {
     headers: myHeaders,
     redirect: 'follow'
   };
-  const response = await fetch(mitrol.apiUrl+endpoint , requestOptions)
+  let urlWS = mitrol.apiUrl+endpoint
+  const response = await fetch(urlWS , requestOptions)
+  console.log("post - urlWS: ", urlWS)
+  console.log("post - response: ", response)
   return await response.json()
 },
-
 /**
 * @method get Call endpoint GET
 * @param {endpoint} string , endpoint to call
@@ -40,7 +42,9 @@ var requestOptions = {
   headers: myHeaders,
   redirect: 'follow'
 }
+let urlWS = mitrol.apiUrl+endpoint
 const response = await fetch(mitrol.apiUrl+endpoint , requestOptions)
+console.log("get - urlWS: ", urlWS)
 return await response.json()
 },
 
@@ -53,12 +57,14 @@ return await response.json()
    */
 	call: async (client, idcampania) => {
     try {
-      const endpoint = `/api/call?idCampania=${idcampania}&destino=${client}`
+      let loginId = mitrol.getUrlParams("loginId")
+      const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}`
       console.log(`call - calling endpoint ${endpoint}`)
       let jwt = mitrol.getUrlParams("jwt")
       await mitrol.post(endpoint, jwt)
       .then((res) => {
         //TODO: define responses of webpadAPI to know how to handle success
+        console.log(`call - res.idInteraccion: ${res.idInteraccion}`)
         return res.idInteraccion
       })  
     } catch (error) {
