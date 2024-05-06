@@ -163,15 +163,36 @@ return await response.json()
       return false
       }
     },
-    
-    getResultadoGestion: async () => {
-    //TODO: define getResultadosGestion and others
+  /**
+   * @method getResultadoGestion return ordered tree object of resultadosGestion
+   * @param {resultadosGestion} Array - resultadosGestion to be ordered by previous db query
+   * @return {output} Array of resultados gestion as ordered tree for frontend
+   */
+    getResultadoGestion: async (resultadosGestion) => {
+      let output = []
+      for(resultados of resultadosGestion){
+        if (!output.find(item => item.label === resultados['parent_name'])) {
+          output.push({
+            'label': resultados['parent_name'],
+            'value': resultados['idResultadoGestionParent'],
+            'children': []
+          });
+        }
+        let parent = output.find(item => item.label === resultados['parent_name']);
+        if (parent) {
+          parent.children.push({
+            'label': resultados['child_name'],
+            'value': resultados['idResultadoGestionChild']
+          });
+        }
+      }
+      return output
     },
     /**
-     * 
-     * @param {*} param Name of value on URL
-     * @returns {*} paramValue according to the value on get URL
-     */
+   * @method getUrlParams return value of param from url
+   * @param {param} string - string of param to obtain
+   * @return {paramValue} value of the param obtained
+   */
     getUrlParams: (param) => {
       var paramValue = "";
       var copyParam = "";
