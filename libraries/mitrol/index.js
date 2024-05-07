@@ -171,7 +171,7 @@ return await response.json()
     getResultadoGestion: async (resultadosGestion) => {
       let output = []
       console.log(`getResultadoGestion - resultadosGestion: ${resultadosGestion}`)
-      for(resultados of resultadosGestion){
+      for(let resultados of resultadosGestion){
         if (!output.find(item => item.label === resultados['parent_name'])) {
           output.push({
             'label': resultados['parent_name'],
