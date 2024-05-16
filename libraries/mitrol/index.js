@@ -61,12 +61,10 @@ return await response.json()
       const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}`
       console.log(`call - calling endpoint ${endpoint}`)
       let jwt = mitrol.getUrlParams("jwt")
-      await mitrol.post(endpoint, jwt)
-      .then((res) => {
-        //TODO: define responses of webpadAPI to know how to handle success
-        console.log(`call - res.idInteraccion: ${res.idInteraccion}`)
-        return res.idInteraccion
-      })  
+      let res = await mitrol.post(endpoint, jwt)
+      console.log(`call - res.idInteraccion: ${res.idInteraccion}`)
+      return res.idInteraccion
+      
     } catch (error) {
       console.error(`Error on call: ${error}`)
       return false
@@ -175,7 +173,7 @@ return await response.json()
         if (!output.find(item => item.label === resultados['parent_name'])) {
           output.push({
             'label': resultados['parent_name'],
-            'value': resultados['idResultadoGestionParent'],
+            'value': resultados['parent_name'],
             'children': []
           });
         }
@@ -183,7 +181,7 @@ return await response.json()
         if (parent) {
           parent.children.push({
             'label': resultados['child_name'],
-            'value': resultados['idResultadoGestionChild']
+            'value': resultados['child_name']
           });
         }
       }
@@ -200,7 +198,6 @@ return await response.json()
       var copyParam = "";
       var isParam = false;
       var isParamValue = false;
-      console.log(`getUrlParams - mitrol.formUrl: ${mitrol.formUrl}`)
       for(let i = 0; mitrol.formUrl[i] !== undefined; i++) {
         // Check the word character per character
         if (!isParamValue) {
