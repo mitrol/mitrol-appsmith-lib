@@ -70,6 +70,30 @@ return await response.json()
       return false
     }
 	},
+  
+    /**
+   * @method call Call using webpad api call endpoint
+   * @param {client} number, telephone number to call
+   * @param {number} idcampania - idcampania to set to idinteraccion
+   * @param {varchar} jwt - jwt token
+   * @param {varchar} idInteraccion - idInteraccion
+   * @return {idInteraccion} idInteraccion generated of the call
+   */
+	callOnInteraction: async (client, idcampania,idInterracion) => {
+    try {
+      let loginId = mitrol.getUrlParams("loginId")
+      const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}&interactionId=${idInterracion}`
+      console.log(`call - calling endpoint ${endpoint}`)
+      let jwt = mitrol.getUrlParams("jwt")
+      let res = await mitrol.post(endpoint, jwt)
+      console.log(`call - res.idInteraccion: ${res.idInteraccion}`)
+      return res.idInteraccion
+      
+    } catch (error) {
+      console.error(`Error on call: ${error}`)
+      return false
+    }
+	},
   /**
    * @method hold hold idinteraccion using webpad API
    * @param {idInteraccion} varchar - idInteraccion to hold
