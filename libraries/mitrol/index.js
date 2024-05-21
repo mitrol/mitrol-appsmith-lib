@@ -3,54 +3,53 @@ export default {
    * @module mitrol Provides methods to interact with Mitrol
    */
 
-apiUrl: "",
-formUrl: "",
-/**
- * @method post Call endpoint POST
- * @param {endpoint} string , endpoint to call
- * @param {jwt} string , jwt token
- * @return {Promise} Promise object represents the response of the call
- */
-post: async (endpoint, jwt) => {
-  //set headers
+  apiUrl: "",
+  formUrl: "",
+  /**
+   * @method post Call endpoint POST
+   * @param {string} endpoint , endpoint to call
+   * @param {string} jwt , jwt token
+   * @return {Promise} Promise object represents the response of the call
+   */
+  post: async (endpoint, jwt) => {
+    //set headers
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer "+ jwt);
+    //req opts
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+    let urlWS = mitrol.apiUrl+endpoint
+    const response = await fetch(urlWS , requestOptions)
+    console.log("post - urlWS: ", urlWS)
+    console.log("post - response: ", response)
+    return await response.json()
+  },
+  /**
+  * @method get Call endpoint GET
+  * @param {string} endpoint , endpoint to call
+  * @param {string} jwt , jwt token
+  * @return {Promise} Promise object represents the response of the call
+  */
+  get: async (endpoint, jwt) => {
   var myHeaders = new Headers();
   myHeaders.append("Authorization", "Bearer "+ jwt);
   //req opts
   var requestOptions = {
-    method: 'POST',
+    method: 'GET',
     headers: myHeaders,
     redirect: 'follow'
-  };
+  }
   let urlWS = mitrol.apiUrl+endpoint
-  const response = await fetch(urlWS , requestOptions)
-  console.log("post - urlWS: ", urlWS)
-  console.log("post - response: ", response)
+  const response = await fetch(mitrol.apiUrl+endpoint , requestOptions)
+  console.log("get - urlWS: ", urlWS)
   return await response.json()
-},
-/**
-* @method get Call endpoint GET
-* @param {endpoint} string , endpoint to call
-* @param {jwt} string , jwt token
-* @return {Promise} Promise object represents the response of the call
-*/
-get: async (endpoint, jwt) => {
-var myHeaders = new Headers();
-myHeaders.append("Authorization", "Bearer "+ jwt);
-//req opts
-var requestOptions = {
-  method: 'GET',
-  headers: myHeaders,
-  redirect: 'follow'
-}
-let urlWS = mitrol.apiUrl+endpoint
-const response = await fetch(mitrol.apiUrl+endpoint , requestOptions)
-console.log("get - urlWS: ", urlWS)
-return await response.json()
-},
-
+  },
   /**
    * @method call Call using webpad api call endpoint
-   * @param {client} number, telephone number to call
+   * @param {number} client, telephone number to call
    * @param {number} idcampania - idcampania to set to idinteraccion
    * @param {varchar} jwt - jwt token
    * @return {idInteraccion} idInteraccion generated of the call
@@ -70,18 +69,16 @@ return await response.json()
       return false
     }
 	},
-  
-    /**
-   * @method call Call using webpad api call endpoint
-   * @param {client} number, telephone number to call
-   * @param {number} idcampania - idcampania to set to idinteraccion
-   * @param {varchar} jwt - jwt token
-   * @param {varchar} idInteraccion - idInteraccion
+  /**
+   * @method callOnInteraction Call using webpad api call endpoint
+   * @param {number} client, telephone number to call
    * @return {idInteraccion} idInteraccion generated of the call
    */
-	callOnInteraction: async (client, idcampania,idInterracion) => {
+	callOnInteraction: async (client) => {
     try {
       let loginId = mitrol.getUrlParams("loginId")
+      let idcampania = mitrol.getUrlParams("idcampania")
+      let idInterracion = mitrol.getUrlParams("idLlamada")
       const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}&interactionId=${idInterracion}`
       console.log(`call - calling endpoint ${endpoint}`)
       let jwt = mitrol.getUrlParams("jwt")
@@ -96,7 +93,7 @@ return await response.json()
 	},
   /**
    * @method hold hold idinteraccion using webpad API
-   * @param {idInteraccion} varchar - idInteraccion to hold
+   * @param {varchar} idInteraccion - idInteraccion to hold
    * @return {bool} bool represents the machine state of function
    */
   hold: async (idInteraccion) => {
@@ -115,7 +112,7 @@ return await response.json()
 	},
   /**
    * @method resume resume call using webpad API
-   * @param {idInteraccion} varchar - idInteraccion to resume
+   * @param {varchar} idInteraccion - idInteraccion to resume
    * @return {bool} bool represents the machine state of function
    */
 	resume: async (idInteraccion) => {
@@ -132,25 +129,8 @@ return await response.json()
     }
 	},
   /**
-   * @method hangup end call using webpad API
-   * @param {idInteraccion} varchar - idInteraccion to end
-   * @return {bool} bool represents the machine state of function
-   */
-	hangup: async (idInteraccion) => {
-    try {
-		let jwt = mitrol.getUrlParams("jwt")
-		const endpoint = `/api/hangup?idInteraccion=${idInteraccion}`
-		await mitrol.post(endpoint, jwt)  
-    //TODO: define responses of webpadAPI to know how to handle success
-    return true
-    } catch (error) {
-      console.error(`Error on hangup: ${error}`)
-      return false
-    }
-	},
-  /**
    * @method getOutboundCampaigns get all outbound campaigns
-   * @param {loginId} varchar - loginId to get campaigns
+   * @param {varchar} loginId - loginId to get campaigns
    * @return {Array} Array of outbound campaigns
    */
 	getOutboundCampaigns: async (loginId) => {
@@ -167,82 +147,128 @@ return await response.json()
     return outboundCampaigns
 	},
   /**
-   * @method getInboundCampaigns get all inbound campaigns
-   * @param {idInteraccion} varchar - idInteraccion to set resultado gestion to.
-   * @param {idResultadoGestionInterno} - ID of resultado gestion to be set
-   * @return {Array} Array of inbound campaigns
-   */
-  setResultadoGestion: async (idInteraccion, idResultadoGestionInterno) => {
-    try {
-    //TODO: define how to obtain jwt from onload
-    let jwt = mitrol.getUrlParams("jwt")
-    let endpoint = `/interactionresult?idInteraccion=${idInteraccion}&idResultadoGestionInterno=${idResultadoGestionInterno}`
-    await mitrol.get(endpoint, jwt)
-    //TODO: define responses of webpadAPI to know how to handle success
-    return true
-    } catch (error) {
-      console.error(`Error on setResultadoGestion: ${error}`)
-      return false
-      }
-    },
-  /**
-   * @method getResultadoGestion return ordered tree object of resultadosGestion
-   * @param {resultadosGestion} Array - resultadosGestion to be ordered by previous db query
-   * @return {output} Array of resultados gestion as ordered tree for frontend
-   */
-    getResultadoGestion: async (resultadosGestion) => {
-      let output = []
-      console.log(`getResultadoGestion - resultadosGestion: ${resultadosGestion}`)
-      for(let resultados of resultadosGestion){
-        if (!output.find(item => item.label === resultados['parent_name'])) {
-          output.push({
-            'label': resultados['parent_name'],
-            'value': resultados['parent_name'],
-            'children': []
-          });
-        }
-        let parent = output.find(item => item.label === resultados['parent_name']);
-        if (parent) {
-          parent.children.push({
-            'label': resultados['child_name'],
-            'value': resultados['child_name']
-          });
-        }
-      }
-      console.log(`getResultadoGestion - resultados: ${output}`)
-      return output
-    },
-    /**
    * @method getUrlParams return value of param from url
-   * @param {param} string - string of param to obtain
+   * @param {string} param - string of param to obtain
    * @return {paramValue} value of the param obtained
    */
-    getUrlParams: (param) => {
-      var paramValue = "";
-      var copyParam = "";
-      var isParam = false;
-      var isParamValue = false;
-      for(let i = 0; mitrol.formUrl[i] !== undefined; i++) {
-        // Check the word character per character
-        if (!isParamValue) {
-          if (mitrol.formUrl[i] === param[copyParam.length]) {
-            copyParam += mitrol.formUrl[i];
-            isParam = copyParam === param;
-            if (isParam) {
-              i++;  // Skip over the "="
-              isParamValue = true;
-            }
-          } else {
-            copyParam = "";
+  getUrlParams: (param) => {
+    var paramValue = "";
+    var copyParam = "";
+    var isParam = false;
+    var isParamValue = false;
+    for(let i = 0; mitrol.formUrl[i] !== undefined; i++) {
+      // Check the word character per character
+      if (!isParamValue) {
+        if (mitrol.formUrl[i] === param[copyParam.length]) {
+          copyParam += mitrol.formUrl[i];
+          isParam = copyParam === param;
+          if (isParam) {
+            i++;  // Skip over the "="
+            isParamValue = true;
           }
         } else {
-          if (mitrol.formUrl[i] === '&' || mitrol.formUrl[i] === undefined) {
-            break;
-          }
-          paramValue += mitrol.formUrl[i];
+          copyParam = "";
+        }
+      } else {
+        if (mitrol.formUrl[i] === '&' || mitrol.formUrl[i] === undefined) {
+          break;
+        }
+        paramValue += mitrol.formUrl[i];
+      }
+    }
+    console.log(`getUrlParams - paramName: ${param} | paramValue: ${paramValue}`)
+    return paramValue;
+  },
+  /**
+   * @method hangup end call using webpad API
+   * @param {varchar} idInteraccion
+   * @return {boolean} 
+   */
+  hangup: async (idInteraccion) => {
+    try{
+      let loginId = String(await mitrol.getUrlParams("loginId"));
+      let jwt = String(await mitrol.getUrlParams("jwt"));
+      let endpoint = `/api/${loginId}/hangup?idInteraccion=${idInteraccion}`
+      let response = await mitrol.post(endpoint, jwt)
+      if (response.status === 200){
+        console.log(`hangup - success`)
+        return true
+      }else{
+        console.log(`hangup - failed`)
+        return false
+      }
+    } catch (error) {
+        console.error(`Error on hangup: ${error}`)
+        return false
+    }
+  },
+   /**
+   * @method setResultadoGestion
+   * @param {varchar} idInteraccion
+   * @param {}idCliente
+   * @param {varchar} idResultadoGestionInterno- ID of resultado gestion to be set
+   * @return {} 
+   */
+  setResultadoGestion: async (idInteraccion, idCliente, idResultadoGestion) => {
+    try{
+      let loginId = String(await mitrol.getUrlParams("loginId"));
+      let jwt = String(await mitrol.getUrlParams("jwt"));
+      let endpoint = `/api/${loginId}/interactionresult?idInteraccion=${idInteraccion}&crmId=${idCliente}&idResultadoGestionInterno=${idResultadoGestion}&idResultadoGestionExterno=${idResultadoGestion}`
+      let response = await mitrol.get(endpoint, jwt)
+      if (response.status === 200){
+        console.log(`setResultadoGestion - success`)
+        return true
+      }else{
+        console.log(`setResultadoGestion - failed`)
+        return false
+      }
+    } catch (error) {
+        console.error(`Error on setResultadoGestion: ${error}`)
+        return null
+    }
+  },
+   /**
+   * @method getResultadoGestion return ordered tree object of resultadosGestion
+   * @param {Array} resultadosGestion - resultadosGestion to be ordered by previous db query
+   * @return {}
+   */
+  getResultadoGestion: async (resultadosGestion) => {
+    try{
+      let parents = []
+      let children = []
+      for (let i = 0 ; i < resultadosGestion.length; i++){
+        if(!parents.some(parent => parent.name === resultadosGestion[i]['parent_name'] && parent.code === resultadosGestion[i]['parent_name'])){
+          parents.push({"name":resultadosGestion[i]['parent_name'], "code":resultadosGestion[i]['parent_name']})
+        }
+        if(!children.some(child => children.name === resultadosGestion[i]['child_name'] && children.code === resultadosGestion[i]['idResultadoGestionChild'])){
+					children.push({"name":resultadosGestion[i]['child_name'], "code":resultadosGestion[i]['idResultadoGestionChild']})
+			  }
+      }
+      console.log(`getResultadoGestion - ${parents}, ${children}`)
+      return parents, children
+    } catch (error) {
+      console.error(`Error on getResultadoGestion: ${error}`)
+      return null, null
+    }
+  },
+  /**
+   * @method getResultadoGestion return ordered tree object of resultadosGestion
+   * @param {Array} resultadosGestion - resultadosGestion to be ordered by previous db query
+   * @return {}
+   */
+  setResultadoUI: async (resultadosGestion) => {
+    try{
+      let children = []
+      for (let i = 0; i < resultadosGestion.length;i++){
+        if(gestionPadre.selectedOptionValue === resultadosGestion[i]['parent_name']){
+            children.push({"name":resultadosGestion[i]['child_name'], "code":resultadosGestion[i]['idResultadoGestionChild']})
         }
       }
-      console.log(`getUrlParams - paramName: ${param} | paramValue: ${paramValue}`)
-      return paramValue;
+      console.log(`setUIResultadoGestion - ${children}`)
+      return children
+    } catch (error) {
+        console.error(`Error on setUIResultadoChild: ${error}`)
+        return null
     }
+  }
 }
