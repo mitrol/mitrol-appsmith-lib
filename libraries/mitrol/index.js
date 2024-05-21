@@ -244,11 +244,11 @@ export default {
 					children.push({"name":resultadosGestion[i]['child_name'], "code":resultadosGestion[i]['idResultadoGestionChild']})
 			  }
       }
-      console.log(`getResultadoGestion - La categorias son:${parents}. Las subcategorias son: ${children}.`)
+      console.log(`getResultadoGestion - Las categorias son: ${JSON.stringify(parents)}. Las subcategorias son: ${JSON.stringify(children)}.`)
       return [parents, children]
     } catch (error) {
         console.error(`Error on getResultadoGestion: ${error}`)
-        return null, null
+        return [null, null];
     }
   },
   /**
