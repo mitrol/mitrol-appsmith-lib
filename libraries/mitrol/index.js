@@ -240,15 +240,15 @@ export default {
         if(!parents.some(parent => parent.name === resultadosGestion[i]['parent_name'] && parent.code === resultadosGestion[i]['parent_name'])){
           parents.push({"name":resultadosGestion[i]['parent_name'], "code":resultadosGestion[i]['parent_name']})
         }
-        if(!children.some(child => children.name === resultadosGestion[i]['child_name'] && children.code === resultadosGestion[i]['idResultadoGestionChild'])){
+        if(!children.some(child => child.name === resultadosGestion[i]['child_name'] && child.code === resultadosGestion[i]['idResultadoGestionChild'])){
 					children.push({"name":resultadosGestion[i]['child_name'], "code":resultadosGestion[i]['idResultadoGestionChild']})
 			  }
       }
-      console.log(`getResultadoGestion - ${parents}, ${children}`)
-      return parents, children
+      console.log(`getResultadoGestion - La categorias son:${parents}. Las subcategorias son: ${children}.`)
+      return [parents, children]
     } catch (error) {
-      console.error(`Error on getResultadoGestion: ${error}`)
-      return null, null
+        console.error(`Error on getResultadoGestion: ${error}`)
+        return null, null
     }
   },
   /**
