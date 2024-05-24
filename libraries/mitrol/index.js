@@ -215,6 +215,7 @@ export default {
       let jwt = String(await mitrol.getUrlParams("jwt"));
       let endpoint = `/api/${loginId}/interactionresult?idInteraccion=${idInteraccion}&crmId=${idCliente}&idResultadoGestionInterno=${idResultadoGestion}&idResultadoGestionExterno=${idResultadoGestion}`
       let response = await mitrol.get(endpoint, jwt)
+      console.log(`setResultadoGestion - ${response}`)
       if (response.status === 200){
         console.log(`setResultadoGestion - success`)
         return true
