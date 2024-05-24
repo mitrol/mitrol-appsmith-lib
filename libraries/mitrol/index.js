@@ -254,13 +254,14 @@ export default {
   /**
    * @method getResultadoGestion return ordered tree object of resultadosGestion
    * @param {Array} resultadosGestion - resultadosGestion to be ordered by previous db query
+   * @param {varchar} selectPadre
    * @return {}
    */
-  setResultadoUI: async (resultadosGestion) => {
+  setResultadoUI: async (resultadosGestion, selectPadre) => {
     try{
       let children = []
       for (let i = 0; i < resultadosGestion.length;i++){
-        if(gestionPadre.selectedOptionValue === resultadosGestion[i]['parent_name']){
+        if(selectPadre === resultadosGestion[i]['parent_name']){
             children.push({"name":resultadosGestion[i]['child_name'], "code":resultadosGestion[i]['idResultadoGestionChild']})
         }
       }
