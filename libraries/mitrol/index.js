@@ -277,7 +277,7 @@ export default {
         return false
         }
     } catch (error) {
-      console.error(`Error on hold: ${error}`)
+      console.error(`Error on resume: ${error}`)
       return null
     }
   }
