@@ -92,43 +92,6 @@ export default {
     }
 	},
   /**
-   * @method hold hold idinteraccion using webpad API
-   * @param {varchar} idInteraccion - idInteraccion to hold
-   * @return {bool} bool represents the machine state of function
-   */
-  hold: async (idInteraccion) => {
-    let jwt = mitrol.getUrlParams("jwt")
-		//armado de url para post request y ejecucion de funcion
-		let endpoint = `/api/hold?idInteraccion=${idInteraccion}`
-    try {
-      await mitrol.post(endpoint, jwt)
-      //TODO: define responses of webpadAPI to know how to handle success
-      return true
-    }
-    catch (error) {
-      console.error(`Error on hold: ${error}`)
-      return false
-    }
-	},
-  /**
-   * @method resume resume call using webpad API
-   * @param {varchar} idInteraccion - idInteraccion to resume
-   * @return {bool} bool represents the machine state of function
-   */
-	resume: async (idInteraccion) => {
-		let jwt = mitrol.getUrlParams("jwt")
-		//armado de url para post request y ejecucion de funcion
-		let endpoint = `/api/resume?idInteraccion=${idInteraccion}`
-    try {
-      mitrol.post(endpoint, jwt)
-      //TODO: define responses of webpadAPI to know how to handle success
-      return true  
-    } catch (error) {
-      console.error(`Error on resume: ${error}`)
-      return false
-    }
-	},
-  /**
    * @method getOutboundCampaigns get all outbound campaigns
    * @param {varchar} loginId - loginId to get campaigns
    * @return {Array} Array of outbound campaigns
@@ -181,8 +144,8 @@ export default {
   },
   /**
    * @method hangup end call using webpad API
-   * @param {varchar} idInteraccion
-   * @return {boolean} 
+   * @param {varchar} idInteraccion - idInteraccion to resume
+   * @return {bool} bool represents the machine state of function
    */
   hangup: async (idInteraccion) => {
     try{
@@ -204,10 +167,10 @@ export default {
   },
    /**
    * @method setResultadoGestion
-   * @param {varchar} idInteraccion
+   * @param {varchar} idInteraccion - idInteraccion to resume
    * @param {}idCliente
    * @param {varchar} idResultadoGestionInterno- ID of resultado gestion to be set
-   * @return {} 
+   * @return {bool} bool represents the machine state of function
    */
   setResultadoGestion: async (idInteraccion, idCliente, idResultadoGestion) => {
     try{
@@ -252,7 +215,7 @@ export default {
     }
   },
   /**
-   * @method getResultadoGestion return ordered tree object of resultadosGestion
+   * @method setResultadoUI return ordered tree object of resultadosGestion
    * @param {Array} resultadosGestion - resultadosGestion to be ordered by previous db query
    * @param {varchar} selectPadre
    * @return {}
@@ -270,6 +233,52 @@ export default {
     } catch (error) {
         console.error(`Error on setUIResultadoChild: ${error}`)
         return null
+    }
+  },
+    /**
+   * @method hold return ordered tree object of resultadosGestion
+   * @param {varchar} idInteraccion - idInteraccion to resume
+   * @return {bool} bool represents the machine state of function
+   */
+  hold: async (idInteraccion) =>{
+    try{
+      let loginId = String(await mitrol.getUrlParams("loginId"));
+      let jwt = String(await mitrol.getUrlParams("jwt"));
+      let endpoint = `/api/${loginId}/hold?idInteraccion=${idInteraccion}`
+      let response = await mitrol.post(endpoint, jwt)
+      if (response.status === 200){
+        console.log(`hold - success`)
+        return true
+      }else{
+        console.log(`hold - failed`)
+        return false
+        }
+    } catch (error) {
+      console.error(`Error on hold: ${error}`)
+      return null
+    }
+  },
+      /**
+   * @method resume return ordered tree object of resultadosGestion
+   * @param {varchar} idInteraccion - idInteraccion to resume
+   * @return {bool} bool represents the machine state of function
+   */
+  resume: async (idInteraccion) =>{
+    try{
+      let loginId = String(await mitrol.getUrlParams("loginId"));
+      let jwt = String(await mitrol.getUrlParams("jwt"));
+      let endpoint = `/api/${loginId}/resume?idInteraccion=${idInteraccion}`
+      let response = await mitrol.post(endpoint, jwt)
+      if (response.status === 200){
+        console.log(`resume - success`)
+        return true
+      }else{
+        console.log(`resume - failed`)
+        return false
+        }
+    } catch (error) {
+      console.error(`Error on hold: ${error}`)
+      return null
     }
   }
 }
