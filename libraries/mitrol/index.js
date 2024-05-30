@@ -299,11 +299,11 @@ export default {
       let jwt = String(await mitrol.getUrlParams("jwt"))
       let response = await mitrol.get(endpoint, jwt)
       console.log(`agentState - El response es: ${JSON.stringify(response)}`)
-      if (response.value == "Success"){
-        console.log(`agentState - success`)
+      if (response.displayName == "Preview"){
+        console.log(`agentState - sin llamada en curso`)
         return true
       }else{
-        console.log(`agentState - failed`)
+        console.log(`agentState - llamada en curso`)
         return false
         }
     } catch (error) {
