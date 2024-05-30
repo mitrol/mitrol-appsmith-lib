@@ -150,9 +150,11 @@ export default {
   hangup: async (idInteraccion) => {
     try{
       let loginId = String(await mitrol.getUrlParams("loginId"));
+      const endpoint = `/api/${loginId}/hangup?idInteraccion=${idInteraccion}`
+      console.log(`hangup - endpoint ${endpoint}`)
       let jwt = String(await mitrol.getUrlParams("jwt"));
-      let endpoint = `/api/${loginId}/hangup?idInteraccion=${idInteraccion}`
       let response = await mitrol.post(endpoint, jwt)
+      console.log(`hangup - El response es: ${response}`)
       if (response.status === 200){
         console.log(`hangup - success`)
         return true
@@ -243,9 +245,11 @@ export default {
   hold: async (idInteraccion) =>{
     try{
       let loginId = String(await mitrol.getUrlParams("loginId"));
+      const endpoint = `/api/${loginId}/hold?idInteraccion=${idInteraccion}`
+      console.log(`hold - endpoint ${endpoint}`)
       let jwt = String(await mitrol.getUrlParams("jwt"));
-      let endpoint = `/api/${loginId}/hold?idInteraccion=${idInteraccion}`
       let response = await mitrol.post(endpoint, jwt)
+      console.log(`hold - El response es: ${response}`)
       if (response.status === 200){
         console.log(`hold - success`)
         return true
@@ -266,9 +270,11 @@ export default {
   resume: async (idInteraccion) =>{
     try{
       let loginId = String(await mitrol.getUrlParams("loginId"));
+      const endpoint = `/api/${loginId}/resume?idInteraccion=${idInteraccion}`
+      console.log(`resume - endpoint ${endpoint}`)
       let jwt = String(await mitrol.getUrlParams("jwt"));
-      let endpoint = `/api/${loginId}/resume?idInteraccion=${idInteraccion}`
       let response = await mitrol.post(endpoint, jwt)
+      console.log(`resume - El response es: ${response}`)
       if (response.status === 200){
         console.log(`resume - success`)
         return true
