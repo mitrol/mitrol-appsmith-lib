@@ -144,7 +144,7 @@ export default {
   },
   /**
    * @method hangup end call using webpad API
-   * @param {varchar} idInteraccion - idInteraccion to resume
+   * @param {varchar} idInteraccion - idInteraccion
    * @return {bool} bool represents the machine state of function
    */
   hangup: async (idInteraccion) => {
@@ -169,7 +169,7 @@ export default {
   },
    /**
    * @method setResultadoGestion
-   * @param {varchar} idInteraccion - idInteraccion to resume
+   * @param {varchar} idInteraccion - idInteraccion 
    * @param {}idCliente
    * @param {varchar} idResultadoGestionInterno- ID of resultado gestion to be set
    * @return {bool} bool represents the machine state of function
@@ -239,7 +239,7 @@ export default {
   },
     /**
    * @method hold return ordered tree object of resultadosGestion
-   * @param {varchar} idInteraccion - idInteraccion to resume
+   * @param {varchar} idInteraccion - idInteraccion
    * @return {bool} bool represents the machine state of function
    */
   hold: async (idInteraccion) =>{
@@ -264,7 +264,7 @@ export default {
   },
       /**
    * @method resume return ordered tree object of resultadosGestion
-   * @param {varchar} idInteraccion - idInteraccion to resume
+   * @param {varchar} idInteraccion - idInteraccion 
    * @return {bool} bool represents the machine state of function
    */
   resume: async (idInteraccion) =>{
@@ -288,7 +288,7 @@ export default {
     }
   },
   /**
-  * @method resume return ordered tree object of resultadosGestion
+  * @method agentState return ordered tree object of resultadosGestion
   * @return {bool} bool represents the machine state of function
   */
   agentState: async () =>{
@@ -308,6 +308,31 @@ export default {
         }
     } catch (error) {
       console.error(`Error on agentState: ${error}`)
+      return null
+    }
+  },
+  /**
+  * @method resume return ordered tree object of resultadosGestion
+  * @param {varchar} idInteraccion idInteraccion
+  * @return {bool} bool represents the machine state of function
+  */
+  closeinteraction: async (idInteraccion) =>{
+    try{
+      let loginId = String(await mitrol.getUrlParams("loginId"))
+      const endpoint = `/api/${loginId}/closeinteraction?idInteraccion=${idInteraccion}`
+      console.log(`closeinteraction - endpoint ${endpoint}`)
+      let jwt = String(await mitrol.getUrlParams("jwt"))
+      let response = await mitrol.get(endpoint, jwt)
+      console.log(`agentStcloseinteractionate - El response es: ${JSON.stringify(response)}`)
+      if (response.displayName == "Preview"){
+        console.log(`closeinteraction - interaccion cerrada`)
+        return true
+      }else{
+        console.log(`closeinteraction - no se pudo cerrar la interaccion`)
+        return false
+        }
+    } catch (error) {
+      console.error(`Error on closeinteraction: ${error}`)
       return null
     }
   }
