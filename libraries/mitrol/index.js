@@ -155,7 +155,7 @@ export default {
       let jwt = String(await mitrol.getUrlParams("jwt"))
       let response = await mitrol.post(endpoint, jwt)
       console.log(`hangup - El response es: ${JSON.stringify(response)}`)
-      if (response.status === 200){
+      if (response.value == "Success"){
         console.log(`hangup - success`)
         return true
       }else{
@@ -180,7 +180,7 @@ export default {
       let jwt = String(await mitrol.getUrlParams("jwt"))
       let endpoint = `/api/${loginId}/interactionresult?idInteraccion=${idInteraccion}&crmId=${idCliente}&idResultadoGestionInterno=${idResultadoGestion}&idResultadoGestionExterno=${idResultadoGestion}`
       let response = await mitrol.get(endpoint, jwt)
-      if (response.status === 200){
+      if (response.status == 200){
         console.log(`setResultadoGestion - success`)
         return true
       }else{
@@ -250,7 +250,7 @@ export default {
       let jwt = String(await mitrol.getUrlParams("jwt"))
       let response = await mitrol.post(endpoint, jwt)
       console.log(`hold - El response es: ${JSON.stringify(response)}`)
-      if (response.status === 200){
+      if (response.value == "Success"){
         console.log(`hold - success`)
         return true
       }else{
@@ -275,7 +275,7 @@ export default {
       let jwt = String(await mitrol.getUrlParams("jwt"))
       let response = await mitrol.post(endpoint, jwt)
       console.log(`resume - El response es: ${JSON.stringify(response)}`)
-      if (response.status === 200){
+      if (response.value == "Success"){
         console.log(`resume - success`)
         return true
       }else{
@@ -284,6 +284,30 @@ export default {
         }
     } catch (error) {
       console.error(`Error on resume: ${error}`)
+      return null
+    }
+  },
+  /**
+  * @method resume return ordered tree object of resultadosGestion
+  * @return {bool} bool represents the machine state of function
+  */
+  agentState: async () =>{
+    try{
+      let loginId = String(await mitrol.getUrlParams("loginId"))
+      const endpoint = `/api/${loginId}/agent-state?`
+      console.log(`agentState - endpoint ${endpoint}`)
+      let jwt = String(await mitrol.getUrlParams("jwt"))
+      let response = await mitrol.get(endpoint, jwt)
+      console.log(`agentState - El response es: ${JSON.stringify(response)}`)
+      if (response.value == "Success"){
+        console.log(`agentState - success`)
+        return true
+      }else{
+        console.log(`agentState - failed`)
+        return false
+        }
+    } catch (error) {
+      console.error(`Error on agentState: ${error}`)
       return null
     }
   }
