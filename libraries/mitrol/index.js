@@ -294,7 +294,7 @@ export default {
   agentState: async () =>{
     try{
       let loginId = String(await mitrol.getUrlParams("loginId"))
-      const endpoint = `/api/${loginId}/agent-state?`
+      const endpoint = `/api/${loginId}/agent-state`
       console.log(`agentState - endpoint ${endpoint}`)
       let jwt = String(await mitrol.getUrlParams("jwt"))
       let response = await mitrol.get(endpoint, jwt)
