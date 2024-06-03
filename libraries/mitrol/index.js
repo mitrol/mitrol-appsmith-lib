@@ -275,7 +275,7 @@ export default {
       let jwt = String(await mitrol.getUrlParams("jwt"))
       let response = await mitrol.get(endpoint, jwt)
       console.log(`closeinteractionate - El response es: ${JSON.stringify(response)}`)
-      if (response.displayName == "Preview"){
+      if (response.value == "Success"){
         console.log(`closeinteraction - interaccion cerrada`)
         return true
       }else{
@@ -296,23 +296,23 @@ export default {
     try{
       let loginId = mitrol.getUrlParams("loginId")
       let jwt = mitrol.getUrlParams("jwt")
-      let idcampania = mitrol.getUrlParams("idcampania")
+      let idCampania = mitrol.getUrlParams("idCampania")
       let idInterracion = mitrol.getUrlParams("idLlamada")
       if (mitrol.estadoAgente == "Preview"){
-        const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}`
+        const endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}`
         console.log(`call - calling endpoint ${endpoint}`)
         let response = await mitrol.post(endpoint, jwt)
         console.log(`call - response.idInteraccion: ${response.idInteraccion}`)
         return response.idInteraccion
       } else {
-        const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}&interactionId=${idInterracion}`
-        console.log(`call - calling endpoint ${endpoint}`)
+        const endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}&interactionId=${idInterracion}`
+        console.log(`callOnInteraccion - calling endpoint ${endpoint}`)
         let response = await mitrol.post(endpoint, jwt)
-        console.log(`call - response.idInteraccion: ${response.idInteraccion}`)
-        return response.idInteraccion
+        console.log(`callOnInteraccion - idInteraccion: ${idInteraccion}`)
+        return idInterracion
       }
     } catch (error) {
-      console.error(`Error on call: ${error}`)
+      console.error(`Error on call/callOnInteraccion: ${error}`)
       return null
     }
   },
@@ -320,8 +320,8 @@ export default {
     if (mitrol.estadoAgente == "Preview"){
       return "inactive"
     } else {
-      return "active"
-    
+      return "active"  
+    }
   }
 }
 
