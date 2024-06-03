@@ -5,6 +5,7 @@ export default {
 
   apiUrl: "",
   formUrl: "",
+  estadoAgente: "",
   /**
    * @method post Call endpoint POST
    * @param {string} endpoint , endpoint to call
@@ -54,7 +55,8 @@ export default {
    * @param {varchar} jwt - jwt token
    * @return {idInteraccion} idInteraccion generated of the call
    */
-	call: async (client, idcampania) => {
+	/**
+    call: async (client, idcampania) => {
     try {
       let loginId = mitrol.getUrlParams("loginId")
       const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}`
@@ -63,17 +65,18 @@ export default {
       let res = await mitrol.post(endpoint, jwt)
       console.log(`call - res.idInteraccion: ${res.idInteraccion}`)
       return res.idInteraccion
-      
     } catch (error) {
       console.error(`Error on call: ${error}`)
       return false
     }
 	},
+  */
   /**
    * @method callOnInteraction Call using webpad api call endpoint
    * @param {number} client, telephone number to call
    * @return {idInteraccion} idInteraccion generated of the call
    */
+  /**
 	callOnInteraction: async (client) => {
     try {
       let loginId = mitrol.getUrlParams("loginId")
@@ -91,6 +94,7 @@ export default {
       return false
     }
 	},
+  */
   /**
    * @method getOutboundCampaigns get all outbound campaigns
    * @param {varchar} loginId - loginId to get campaigns
@@ -299,13 +303,7 @@ export default {
       let jwt = String(await mitrol.getUrlParams("jwt"))
       let response = await mitrol.get(endpoint, jwt)
       console.log(`agentState - El response es: ${JSON.stringify(response)}`)
-      if (response.displayName == "Preview"){
-        console.log(`agentState - sin llamada en curso`)
-        return true
-      }else{
-        console.log(`agentState - llamada en curso`)
-        return false
-        }
+      return response.displayName
     } catch (error) {
       console.error(`Error on agentState: ${error}`)
       return null
@@ -323,7 +321,7 @@ export default {
       console.log(`closeinteraction - endpoint ${endpoint}`)
       let jwt = String(await mitrol.getUrlParams("jwt"))
       let response = await mitrol.get(endpoint, jwt)
-      console.log(`agentStcloseinteractionate - El response es: ${JSON.stringify(response)}`)
+      console.log(`closeinteractionate - El response es: ${JSON.stringify(response)}`)
       if (response.displayName == "Preview"){
         console.log(`closeinteraction - interaccion cerrada`)
         return true
@@ -333,6 +331,35 @@ export default {
         }
     } catch (error) {
       console.error(`Error on closeinteraction: ${error}`)
+      return null
+    }
+  },
+  /**
+   * @method call Call using webpad api call endpoint
+   * @param {number} client, telephone number to call
+   * @return {idInteraccion} idInteraccion generated of the call
+   */
+  call: async (client) =>{
+    try{
+      let loginId = mitrol.getUrlParams("loginId")
+      let jwt = mitrol.getUrlParams("jwt")
+      let idcampania = mitrol.getUrlParams("idcampania")
+      let idInterracion = mitrol.getUrlParams("idLlamada")
+      if (mitrol.estadoAgente == "Preview"){
+        const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}`
+        console.log(`call - calling endpoint ${endpoint}`)
+        let response = await mitrol.post(endpoint, jwt)
+        console.log(`call - response.idInteraccion: ${response.idInteraccion}`)
+        return response.idInteraccion
+      } else {
+        const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}&interactionId=${idInterracion}`
+        console.log(`call - calling endpoint ${endpoint}`)
+        let response = await mitrol.post(endpoint, jwt)
+        console.log(`call - response.idInteraccion: ${response.idInteraccion}`)
+        return response.idInteraccion
+      }
+    } catch (error) {
+      console.error(`Error on call: ${error}`)
       return null
     }
   }
