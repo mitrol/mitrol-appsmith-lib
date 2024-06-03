@@ -49,53 +49,6 @@ export default {
   return await response.json()
   },
   /**
-   * @method call Call using webpad api call endpoint
-   * @param {number} client, telephone number to call
-   * @param {number} idcampania - idcampania to set to idinteraccion
-   * @param {varchar} jwt - jwt token
-   * @return {idInteraccion} idInteraccion generated of the call
-   */
-	/**
-    call: async (client, idcampania) => {
-    try {
-      let loginId = mitrol.getUrlParams("loginId")
-      const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}`
-      console.log(`call - calling endpoint ${endpoint}`)
-      let jwt = mitrol.getUrlParams("jwt")
-      let res = await mitrol.post(endpoint, jwt)
-      console.log(`call - res.idInteraccion: ${res.idInteraccion}`)
-      return res.idInteraccion
-    } catch (error) {
-      console.error(`Error on call: ${error}`)
-      return false
-    }
-	},
-  */
-  /**
-   * @method callOnInteraction Call using webpad api call endpoint
-   * @param {number} client, telephone number to call
-   * @return {idInteraccion} idInteraccion generated of the call
-   */
-  /**
-	callOnInteraction: async (client) => {
-    try {
-      let loginId = mitrol.getUrlParams("loginId")
-      let idcampania = mitrol.getUrlParams("idcampania")
-      let idInterracion = mitrol.getUrlParams("idLlamada")
-      const endpoint = `/api/${loginId}/call?idCampania=${idcampania}&destino=${client}&interactionId=${idInterracion}`
-      console.log(`call - calling endpoint ${endpoint}`)
-      let jwt = mitrol.getUrlParams("jwt")
-      let res = await mitrol.post(endpoint, jwt)
-      console.log(`call - res.idInteraccion: ${res.idInteraccion}`)
-      return res.idInteraccion
-      
-    } catch (error) {
-      console.error(`Error on call: ${error}`)
-      return false
-    }
-	},
-  */
-  /**
    * @method getOutboundCampaigns get all outbound campaigns
    * @param {varchar} loginId - loginId to get campaigns
    * @return {Array} Array of outbound campaigns
@@ -362,6 +315,13 @@ export default {
       console.error(`Error on call: ${error}`)
       return null
     }
+  },
+  activacionBotones: async () =>{
+    if (mitrol.estadoAgente == "Preview"){
+      return "inactive"
+    } else {
+      return "active"
+    
   }
 }
 
