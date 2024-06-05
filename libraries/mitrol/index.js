@@ -297,7 +297,7 @@ export default {
       let loginId = mitrol.getUrlParams("loginId")
       let jwt = mitrol.getUrlParams("jwt")
       let idCampania = mitrol.getUrlParams("idCampania")
-      let idInterracion = mitrol.getUrlParams("idLlamada")
+      let idInteraccion = mitrol.getUrlParams("idLlamada")
       if (mitrol.estadoAgente == "Preview"){
         const endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}`
         console.log(`call - calling endpoint ${endpoint}`)
@@ -305,7 +305,7 @@ export default {
         console.log(`call - response.idInteraccion: ${response.idInteraccion}`)
         return response.idInteraccion
       } else {
-        const endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}&interactionId=${idInterracion}`
+        const endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}&interactionId=${idInteraccion}`
         console.log(`callOnInteraccion - calling endpoint ${endpoint}`)
         let response = await mitrol.post(endpoint, jwt)
         console.log(`callOnInteraccion - idInteraccion: ${idInteraccion}`)
