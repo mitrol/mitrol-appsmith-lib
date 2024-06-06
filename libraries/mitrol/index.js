@@ -187,7 +187,7 @@ export default {
             children.push({"name":resultadosGestion[i]['child_name'], "code":resultadosGestion[i]['idResultadoGestionChild']})
         }
       }
-      console.log(`setUIResultadoGestion - ${children}`)
+      console.log(`setUIResultadoGestion - ${JSON.stringify(children)}`)
       return children
     } catch (error) {
         console.error(`Error on setUIResultadoChild: ${error}`)
@@ -293,35 +293,38 @@ export default {
    * @return {idInteraccion} idInteraccion generated of the call
    */
   call: async (client) =>{
-    try{
-      let loginId = mitrol.getUrlParams("loginId")
-      let jwt = mitrol.getUrlParams("jwt")
-      let idCampania = mitrol.getUrlParams("idCampania")
-      let idInteraccion = mitrol.getUrlParams("idLlamada")
-      if (mitrol.estadoAgente == "Preview"){
-        const endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}`
-        console.log(`call - calling endpoint ${endpoint}`)
-        let response = await mitrol.post(endpoint, jwt)
-        console.log(`call - response.idInteraccion: ${response.idInteraccion}`)
-        return response.idInteraccion
-      } else {
-        const endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}&interactionId=${idInteraccion}`
-        console.log(`callOnInteraccion - calling endpoint ${endpoint}`)
-        let response = await mitrol.post(endpoint, jwt)
-        console.log(`callOnInteraccion - idInteraccion: ${idInteraccion}`)
-        return idInterracion
-      }
-    } catch (error) {
-      console.error(`Error on call/callOnInteraccion: ${error}`)
-      return null
-    }
+    try {
+			let loginId = mitrol.getUrlParams("loginId");
+			let jwt = mitrol.getUrlParams("jwt");
+			let idCampania = mitrol.getUrlParams("idCampania");
+			let idInteraccion = mitrol.getUrlParams("idLlamada");
+			let endpoint;
+			if (mitrol.estadoAgente === "Preview") {
+					console.log("CALL")
+					endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}`;
+					console.log(`call - calling endpoint ${endpoint}`);
+			} else {
+					console.log("CALLONINTERACTION")
+					endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}&interactionId=${idInteraccion}`;
+					console.log(`callOnInteraccion - calling endpoint ${endpoint}`);
+			}
+			mitrol.post(endpoint, jwt)
+					.then(response => {
+							if (response.idInteraccion != null) {
+									console.log(`call - ${response.idInteraccion}`);
+									return(response.idInteraccion, "Conectando");
+							} else {
+									console.log("CALL - SIN RUTA")
+									console.log(`call sin ruta - ${response.idInteraccion}`);
+									return(null, "Preview");
+							}
+					})
+					.catch(error => {
+							console.error("Error realizando la llamada:", error);
+					});
+		} catch (error) {
+				console.error(`Error on call/callOnInteraccion: ${error}`);
+		}
   },
-  activacionBotones: async () =>{
-    if (mitrol.estadoAgente == "Preview"){
-      return "inactive"
-    } else {
-      return "active"  
-    }
-  }
 }
 
