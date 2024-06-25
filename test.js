@@ -288,7 +288,7 @@ export default {
             let jwt = String(await mitrol.getUrlParams("jwt"))
             let response = await mitrol.get(endpoint, jwt)
             console.log(`setResultadoGestion - ${JSON.stringify(response)}`)
-            if (response.value == 200) {
+            if (response.code == 0) {
                 console.log(`setResultadoGestion - success`)
                 return true
             } else {
