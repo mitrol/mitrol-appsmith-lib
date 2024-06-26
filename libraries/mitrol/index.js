@@ -141,10 +141,10 @@ export default {
               .then(response => {
                   if (response.idInteraccion != null) {
                       console.log(`call - ${response.idInteraccion}`);
-                      return (response.idInteraccion, "Conectando");
+                      return [response.idInteraccion, "Conectando"];
                   } else {
                       console.log(`call sin ruta - ${response.idInteraccion}`);
-                      return (null, "Preview");
+                      return [null, "Preview"];
                   }
               })
               .catch(error => {
