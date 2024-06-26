@@ -303,7 +303,7 @@ export default {
   /**
   * @method resume return ordered tree object of resultadosGestion
   * @param {varchar} idInteraccion idInteraccion
-  * @return {bool} bool represents the machine state of function
+  * @return {bool}
   **/
   closeinteraction: async (idInteraccion) => {
       try {
