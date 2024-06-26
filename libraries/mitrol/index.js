@@ -290,7 +290,7 @@ export default {
           console.log(`setResultadoGestion - ${JSON.stringify(response)}`)
           if (response.code == 0) {
               console.log(`setResultadoGestion - success`)
-              return true
+              await mitrol.closeinteraction(idInteraccion)
           } else {
               console.log(`setResultadoGestion - failed`)
               return false
