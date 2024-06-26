@@ -279,7 +279,7 @@ export default {
   * @param {varchar} idInteraccion - idInteraccion 
   * @param {}idCliente
   * @param {varchar} idResultadoGestionInterno- ID of resultado gestion to be set
-  * @return {bool} bool represents the machine state of function
+  * @return {bool} 
   **/
   setResultadoGestion: async (idInteraccion, idCliente, idResultadoGestion) => {
       try {
