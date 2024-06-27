@@ -123,39 +123,38 @@ export default {
     **/
     call: async (client) => {
         try {
-            let loginId = mitrol.getUrlParams("loginId");
-            let idCampania = mitrol.getUrlParams("idCampania");
-            let idInteraccion = mitrol.getUrlParams("idLlamada");
-            let jwt = mitrol.getUrlParams("jwt");
-            let endpoint;
+            let loginId = mitrol.getUrlParams("loginId")
+            let idCampania = mitrol.getUrlParams("idCampania")
+            let idInteraccion = mitrol.getUrlParams("idLlamada")
+            let jwt = mitrol.getUrlParams("jwt")
+            let endpoint
             if (mitrol.estadoAgente === "Preview") {
                 console.log("call")
-                endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}`;
-                console.log(`call - calling endpoint ${endpoint}`);
+                endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}`
+                console.log(`call - calling endpoint ${endpoint}`)
             } else {
                 console.log("callOnInteraction")
-                endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}&interactionId=${idInteraccion}`;
-                console.log(`callOnInteraccion - calling endpoint ${endpoint}`);
+                endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}&interactionId=${idInteraccion}`
+                console.log(`callOnInteraccion - calling endpoint ${endpoint}`)
             }
             mitrol.post(endpoint, jwt)
                 .then(response => {
-                    if (response.idInteraccion != null) {
-                        console.log(`call - ${response.idInteraccion}`);
-                        return [response.idInteraccion, "Conectando"];
-                    } else {
-                        console.log(`call sin ruta - ${response.idInteraccion}`);
-                        return [null, "Preview"];
+					console.log(`call - El response es: ${JSON.stringify(response)}`)
+                    if (response.code == 0) {
+                        console.log(`call - ${response.idInteraccion}`)
+                        return [response.idInteraccion,response.code]
+                    } else { 
+                        console.log(`call sin ruta - ${response.idInteraccion}`)
+                        return [null,response.code]
                     }
                 })
                 .catch(error => {
-                    console.error("Error realizando la llamada:", error);
-                    return [null, "Preview"];
-
-                });
+                    console.error("Error realizando la llamada:", error)
+                    return [null, null]
+                })
         } catch (error) {
-            console.error(`Error on call/callOnInteraccion: ${error}`);
-            return [null, "Preview"];
-
+            console.error(`Error on call/callOnInteraccion: ${error}`)
+            return [null, null]
         }
     },
     /**
@@ -171,7 +170,7 @@ export default {
             let jwt = String(await mitrol.getUrlParams("jwt"))
             let response = await mitrol.post(endpoint, jwt)
             console.log(`hangup - El response es: ${JSON.stringify(response)}`)
-            if (response.value == "Success") {
+            if (response.code == 0) {
                 console.log(`hangup - success`)
                 return true
             } else {
@@ -196,7 +195,7 @@ export default {
             let jwt = String(await mitrol.getUrlParams("jwt"))
             let response = await mitrol.post(endpoint, jwt)
             console.log(`hold - El response es: ${JSON.stringify(response)}`)
-            if (response.value == "Success") {
+            if (response.code == 0) {
                 console.log(`hold - success`)
                 return true
             } else {
@@ -221,7 +220,7 @@ export default {
             let jwt = String(await mitrol.getUrlParams("jwt"))
             let response = await mitrol.post(endpoint, jwt)
             console.log(`resume - El response es: ${JSON.stringify(response)}`)
-            if (response.value == "Success") {
+            if (response.code == 0) {
                 console.log(`resume - success`)
                 return true
             } else {
@@ -317,7 +316,7 @@ export default {
             let jwt = String(await mitrol.getUrlParams("jwt"))
             let response = await mitrol.get(endpoint, jwt)
             console.log(`closeinteraction - El response es: ${JSON.stringify(response)}`)
-            if (response.value == "Success") {
+            if (response.code == 0) {
                 console.log(`closeinteraction - interaccion cerrada`)
                 return true
             } else {
