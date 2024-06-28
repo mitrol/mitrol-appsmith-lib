@@ -137,7 +137,7 @@ export default {
                 endpoint = `/api/${loginId}/call?idCampania=${idCampania}&destino=${client}&interactionId=${idInteraccion}`
                 console.log(`callOnInteraccion - calling endpoint ${endpoint}`)
             }
-            mitrol.post(endpoint, jwt)
+            return mitrol.post(endpoint, jwt)
                 .then(response => {
 					console.log(`call - El response es: ${JSON.stringify(response)}`)
                     if (response.code == 0) {
