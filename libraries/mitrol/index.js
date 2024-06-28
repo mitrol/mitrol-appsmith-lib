@@ -145,7 +145,7 @@ export default {
                         return [response.idInteraccion,response.code]
                     } else { 
                         console.log(`call sin ruta - ${response.idInteraccion}`)
-                        return [null,response.code]
+                        return [null,null]
                     }
                 })
                 .catch(error => {
